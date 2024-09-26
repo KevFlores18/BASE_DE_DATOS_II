@@ -1,0 +1,50 @@
+-- Tabla de la orden
+Mysql>CREATE TABLE Order (
+    id INT PRIMARY KEY,
+    date DATE NOT NULL,
+    quantity INT NOT NULL
+);
+
+-- Tabla de productos
+Mysql>CREATE TABLE Product (
+    id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    category_name VARCHAR(255) -- Se omite la restricción FOREIGN KEY
+);
+
+-- Tabla de categorías
+Mysql>CREATE TABLE Category (
+    name VARCHAR(255) PRIMARY KEY
+);
+
+-- Tabla para productos de tipo comida
+Mysql>CREATE TABLE Food (
+    product_id INT PRIMARY KEY,
+    expiration_date DATE NOT NULL,
+    calories INT NOT NULL
+);
+
+-- Tabla para productos de tipo mueble
+Mysql>CREATE TABLE Furniture (
+    product_id INT PRIMARY KEY,
+    manufacturer VARCHAR(255) NOT NULL,
+    color VARCHAR(50) NOT NULL
+);
+
+-- Insertar categorías
+INSERT INTO Category (name) VALUES ('Food');
+INSERT INTO Category (name) VALUES ('Furniture');
+
+-- Insertar productos
+INSERT INTO Product (id, name, price, category_name) VALUES (1, 'Apple', 0.99, 'Food');
+INSERT INTO Product (id, name, price, category_name) VALUES (2, 'Chair', 49.99, 'Furniture');
+
+-- Insertar alimentos
+INSERT INTO Food (product_id, expiration_date, calories) VALUES (1, '2024-12-31', 95);
+
+-- Insertar muebles
+INSERT INTO Furniture (product_id, manufacturer, color) VALUES (2, 'IKEA', 'Black');
+
+-- Insertar ordenes
+INSERT INTO Order (id, date, quantity) VALUES (1, '2023-09-25', 10);
