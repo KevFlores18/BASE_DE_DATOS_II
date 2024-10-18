@@ -1,0 +1,197 @@
+CREATE DATABASE SistemaDePuntoDeVentas;
+
+USE SistemaDePuntoDeVentas;
+
+CREATE TABLE oficinas (
+id_oficina VARCHAR(10) PRIMARY KEY,
+ciudad VARCHAR(50),
+telefono VARCHAR(50),
+direccion VARCHAR(50),
+departamento VARCHAR(50),
+pais VARCHAR(50),
+codigoPostal VARCHAR(15),
+continente VARCHAR(10),
+tipoOficina ENUM('central', 'regional'),
+esActiva BOOLEAN,
+codigoUnico VARCHAR(10) UNIQUE
+);
+
+CREATE TABLE empleados (
+documento INT(11) PRIMARY KEY,
+apellido VARCHAR(50),
+nombre VARCHAR(50),
+extension VARCHAR(10),
+email VARCHAR(100) UNIQUE,
+id_oficina VARCHAR(10),
+jefe INT(11),
+cargo VARCHAR(50),
+tipoContrato ENUM('permanente', 'temporal'),
+esGerente BOOLEAN,
+codigoEmpleado VARCHAR(10) UNIQUE,
+FOREIGN KEY (id_oficina) REFERENCES oficinas(id_oficina)
+);
+
+CREATE TABLE clientes (
+id_cliente INT(11) PRIMARY KEY,
+empresa VARCHAR(50),
+apellido VARCHAR(50),
+nombre VARCHAR(50),
+telefono VARCHAR(50),
+direccion VARCHAR(50),
+ciudad VARCHAR(50),
+departamento VARCHAR(50),
+codigoPostal VARCHAR(15),
+pais VARCHAR(50),
+empleadoAtiende INT(11),
+limiteCredito DOUBLE,
+tipoCliente ENUM('regular', 'premium'),
+esActivo BOOLEAN,
+codigoCliente VARCHAR(10) UNIQUE,
+FOREIGN KEY (empleadoAtiende) REFERENCES empleados(documento)
+);
+
+CREATE TABLE ordenes (
+id_orden INT(11) PRIMARY KEY,
+fechaRecibido DATE,
+fechaLimiteEntrega DATE,
+fechaEntrega DATE,
+estado VARCHAR(15),
+observacion TEXT,
+id_cliente INT(11),
+tipoOrden ENUM('urgente', 'regular'),
+esPagada BOOLEAN,
+codigoOrden VARCHAR(10) UNIQUE,
+FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
+);
+
+CREATE TABLE productos (
+id_producto VARCHAR(15) PRIMARY KEY,
+nombreProducto VARCHAR(70),
+id_lineaProducto INT(5),
+escala VARCHAR(10),
+cantidad INT(6),
+precioVenta DOUBLE,
+MSRP DOUBLE,
+tipoProducto ENUM('electrónico', 'mecánico'),
+esActivo BOOLEAN,
+codigoProducto VARCHAR(10) UNIQUE
+);
+
+CREATE TABLE pagos (
+id_cliente INT(11),
+numeroFactura VARCHAR(50) PRIMARY KEY,
+fechaPago DATE,
+totalPago DOUBLE,
+tipoPago ENUM('transferencia', 'efectivo'),
+esConfirmado BOOLEAN,
+codigoPago VARCHAR(10) UNIQUE,
+FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente)
+);
+
+
+CREATE TABLE detallesOrdenes (
+id_orden INT(11),
+id_producto VARCHAR(15),
+cantidadPedido INT(11),
+valorUnitario DOUBLE,
+ordenEntrega INT(6),
+PRIMARY KEY (id_orden, id_producto),
+FOREIGN KEY (id_orden) REFERENCES ordenes(id_orden),
+FOREIGN KEY (id_producto) REFERENCES productos(id_producto)
+);
+
+
+CREATE TABLE lineasProductos (
+id_lineaproducto INT(5) PRIMARY KEY,
+nombreLinea VARCHAR(50),
+textoDescripcion VARCHAR(4000),
+htmlDescripcion VARCHAR(200),
+imagen VARCHAR(200),
+tipoLinea ENUM('principal', 'secundaria'),
+esVisible BOOLEAN,
+codigoLinea VARCHAR(10) UNIQUE
+);
+
+INSERT INTO oficinas (id_oficina, ciudad, telefono, direccion, departamento, pais, codigoPostal, continente, tipoOficina, esActiva, codigoUnico)
+VALUES
+('OF15', 'Caracas', '123456789', 'Avenida Libertador 234', 'Ventas', 'Venezuela', '20001', 'Sudamérica', 'central', TRUE, 'OFC015'),
+('OF16', 'Quito', '987654321', 'Calle 12 de Octubre 678', 'Soporte', 'Ecuador', '17002', 'Sudamérica', 'regional', TRUE, 'OFC016'),
+('OF17', 'Asunción', '654321098', 'Avenida Artigas 345', 'Marketing', 'Paraguay', '12345', 'Sudamérica', 'regional', TRUE, 'OFC017'),
+('OF18', 'La Paz', '789012345', 'Calle Comercio 789', 'RRHH', 'Bolivia', '45678', 'Sudamérica', 'regional', FALSE, 'OFC018'),
+('OF19', 'Montevideo', '321654987', 'Calle 18 de Julio 456', 'Finanzas', 'Uruguay', '55000', 'Sudamérica', 'central', TRUE, 'OFC019');
+
+INSERT INTO empleados (documento, apellido, nombre, extension, email, id_oficina, jefe, cargo, tipoContrato, esGerente, codigoEmpleado)
+VALUES
+(15, 'Martinez', 'Ricardo', '220', 'ricardo.martinez@mail.com', 'OF15', NULL, 'Analista', 'permanente', FALSE, 'E015'),
+(16, 'Alvarez', 'Ana', '221', 'ana.alvarez@mail.com', 'OF16', 17, 'Gerente', 'permanente', TRUE, 'E016'),
+(17, 'Cruz', 'Javier', '222', 'javier.cruz@mail.com', 'OF17', 15, 'Asistente', 'temporal', FALSE, 'E017'),
+(18, 'Hernandez', 'Lucía', '223', 'lucia.hernandez@mail.com', 'OF15', 16, 'Supervisor', 'permanente', FALSE, 'E018'),
+(19, 'Salazar', 'Diego', '224', 'diego.salazar@mail.com', 'OF16', 17, 'Consultor', 'temporal', FALSE, 'E019');
+
+INSERT INTO clientes (id_cliente, empresa, apellido, nombre, telefono, direccion, ciudad, departamento, codigoPostal, pais, empleadoAtiende, limiteCredito, tipoCliente, esActivo, codigoCliente)
+VALUES
+(15, 'InnovationsCo', 'González', 'Felipe', '123123123', 'Calle Avance 10', 'Caracas', 'Ventas', '20001', 'Venezuela', 15, 18000, 'premium', TRUE, 'CL015'),
+(16, 'SolutionsGroup', 'Morales', 'Elena', '321321321', 'Avenida Progreso 15', 'Quito', 'Soporte', '17002', 'Ecuador', 16, 12000, 'regular', TRUE, 'CL016'),
+(17, 'CreativeTech', 'Lopez', 'Mario', '456456456', 'Calle Creativa 22', 'Asunción', 'Marketing', '12345', 'Paraguay', 17, 8000, 'regular', TRUE, 'CL017'),
+(18, 'NextGen', 'Vargas', 'Claudia', '789789789', 'Avenida Futuro 34', 'La Paz', 'RRHH', '45678', 'Bolivia', 18, 25000, 'premium', TRUE, 'CL018'),
+(19, 'TechForward', 'Ramos', 'Sofia', '654654654', 'Calle Innovadora 45', 'Montevideo', 'Finanzas', '55000', 'Uruguay', 19, 30000, 'premium', FALSE, 'CL019');
+
+INSERT INTO ordenes (id_orden, fechaRecibido, fechaLimiteEntrega, fechaEntrega, estado, observacion, id_cliente, tipoOrden, esPagada, codigoOrden)
+VALUES
+(15, '2024-07-15', '2024-07-30', '2024-07-29', 'entregado', 'Orden cumplida sin inconvenientes', 15, 'urgente', TRUE, 'ORD015'),
+(16, '2024-08-15', '2024-08-30', '2024-08-29', 'entregado', 'Cliente pide cambio de tamaño', 16, 'regular', TRUE, 'ORD016'),
+(17, '2024-09-15', '2024-09-30', '2024-09-28', 'pendiente', 'Esperando confirmación del cliente', 17, 'regular', FALSE, 'ORD017'),
+(18, '2024-10-15', '2024-10-25', '2024-10-24', 'pendiente', 'Orden en proceso de preparación', 18, 'urgente', FALSE, 'ORD018'),
+(19, '2024-11-15', '2024-11-30', '2024-11-29', 'entregado', 'Cliente satisfecho con la calidad', 19, 'regular', TRUE, 'ORD019');
+
+INSERT INTO productos (id_producto, nombreProducto, id_lineaProducto, escala, cantidad, precioVenta, MSRP, tipoProducto, esActivo, codigoProducto)
+VALUES
+('PRD15', 'Laptop Y200', 1, '1:1', 60, 1300.50, 1400.00, 'electrónico', TRUE, 'PRD015'),
+('PRD16', 'Monitor A300', 2, '1:1', 40, 270.00, 320.00, 'electrónico', TRUE, 'PRD016'),
+('PRD17', 'Teclado Inalámbrico X400', 1, '1:1', 160, 85.99, 90.00, 'mecánico', TRUE, 'PRD017'),
+('PRD18', 'Ratón Gaming Z600', 2, '1:1', 220, 45.50, 50.00, 'mecánico', TRUE, 'PRD018'),
+('PRD19', 'Tablet R500', 3, '1:1', 90, 620.00, 680.00, 'electrónico', TRUE, 'PRD019');
+
+INSERT INTO pagos (id_cliente, numeroFactura, fechaPago, totalPago, tipoPago, esConfirmado, codigoPago)
+VALUES
+(15, 'FAC1006', '2024-07-25', 18000.00, 'transferencia', TRUE, 'PAY015'),
+(16, 'FAC1007', '2024-08-30', 12000.00, 'efectivo', TRUE, 'PAY016'),
+(17, 'FAC1008', '2024-09-15', 8000.00, 'transferencia', TRUE, 'PAY017'),
+(18, 'FAC1009', '2024-10-20', 25000.00, 'efectivo', FALSE, 'PAY018'),
+(19, 'FAC1010', '2024-11-20', 30000.00, 'transferencia', TRUE, 'PAY019');
+
+INSERT INTO detallesOrdenes (id_orden, id_producto, cantidadPedido, valorUnitario, ordenEntrega)
+VALUES
+(15, 'PRD15', 6, 1300.50, 1),
+(16, 'PRD16', 8, 270.00, 2),
+(17, 'PRD17', 12, 85.99, 3),
+(18, 'PRD18', 25, 45.50, 4),
+(19, 'PRD19', 9, 620.00, 5);
+
+INSERT INTO lineasProductos (id_lineaproducto, nombreLinea, textoDescripcion, htmlDescripcion, imagen, tipoLinea, esVisible, codigoLinea)
+VALUES
+(1, 'Electrónicos', 'Línea de productos electrónicos de última generación, incluyendo laptops, tabletas y accesorios.', '
+
+Línea de productos electrónicos de última generación, incluyendo laptops, tabletas y accesorios.
+
+', 'imagenes/electronicos.jpg', 'principal', TRUE, 'LINEA01'),
+
+(2, 'Mecánicos', 'Productos mecánicos como teclados, ratones y accesorios ergonómicos.', '
+Productos mecánicos como teclados, ratones y accesorios ergonómicos.
+
+', 'imagenes/mecanicos.jpg', 'secundaria', TRUE, 'LINEA02'),
+
+(3, 'Gaming', 'Línea dedicada a productos de gaming, incluyendo PCs, accesorios y periféricos.', '
+Línea dedicada a productos de gaming, incluyendo PCs, accesorios y periféricos.
+
+', 'imagenes/gaming.jpg', 'principal', TRUE, 'LINEA03'),
+
+(4, 'Hogar Inteligente', 'Soluciones tecnológicas para un hogar más eficiente y conectado.', '
+Soluciones tecnológicas para un hogar más eficiente y conectado.
+
+', 'imagenes/hogar_inteligente.jpg', 'secundaria', TRUE, 'LINEA04'),
+
+(5, 'Accesorios', 'Variedad de accesorios para mejorar la experiencia del usuario con dispositivos electrónicos.', '
+Variedad de accesorios para mejorar la experiencia del usuario con dispositivos electrónicos.
+
+', 'imagenes/accesorios.jpg', 'secundaria', TRUE, 'LINEA05');
