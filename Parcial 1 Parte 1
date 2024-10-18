@@ -195,3 +195,127 @@ Soluciones tecnológicas para un hogar más eficiente y conectado.
 Variedad de accesorios para mejorar la experiencia del usuario con dispositivos electrónicos.
 
 ', 'imagenes/accesorios.jpg', 'secundaria', TRUE, 'LINEA05');
+
+
+--- Parte 2
+
+CREATE DATABASE RecursosHumanos;
+USE RecursosHumanos;
+
+CREATE TABLE Categorias (
+id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+nombre_categoria VARCHAR(50) NOT NULL,
+retribucion DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE Empleados (
+id_empleado INT PRIMARY KEY AUTO_INCREMENT,
+nombre VARCHAR(50) NOT NULL,
+apellido VARCHAR(50) NOT NULL,
+telefono VARCHAR(15),
+email VARCHAR(100),
+direccion VARCHAR(200),
+fecha_nacimiento DATE,
+foto VARCHAR(200),
+id_categoria INT,
+FOREIGN KEY (id_categoria) REFERENCES Categorias(id_categoria)
+);
+
+CREATE TABLE Educacion (
+id_educacion INT PRIMARY KEY AUTO_INCREMENT,
+id_empleado INT,
+nivel_educativo VARCHAR(50),
+institucion VARCHAR(100),
+anio_graduacion INT,
+FOREIGN KEY (id_empleado) REFERENCES Empleados(id_empleado)
+);
+
+CREATE TABLE Detalle_Quincenal (
+id_detalle INT PRIMARY KEY AUTO_INCREMENT,
+id_empleado INT,
+periodo DATE,
+horas_trabajadas INT,
+deducciones DECIMAL(10, 2),
+total_ganado DECIMAL(10, 2),
+FOREIGN KEY (id_empleado) REFERENCES Empleados(id_empleado)
+);
+
+INSERT INTO Categorias (nombre_categoria, retribucion)
+VALUES
+('Desarrollador', 1500.00),
+('Diseñador', 1200.00),
+('Gerente', 2500.00);
+
+INSERT INTO Empleados (nombre, apellido, telefono, email, direccion, fecha_nacimiento, foto, id_categoria)
+VALUES
+('Juan', 'Pérez', '5551234567', 'juan.perez@email.com', 'Calle Falsa 123', '1985-01-01', 'imagenes/juan.jpg', 1),
+('Ana', 'Gómez', '5552345678', 'ana.gomez@email.com', 'Calle Verdadera 456', '1990-02-02', 'imagenes/ana.jpg', 2),
+('Luis', 'Martinez', '5553456789', 'luis.martinez@email.com', 'Calle Ejemplo 789', '1988-03-03', 'imagenes/luis.jpg', 3),
+('María', 'Hernandez', '5554567890', 'maria.hernandez@email.com', 'Avenida Central 101', '1992-04-04', 'imagenes/maria.jpg', 1),
+('Carlos', 'Jiménez', '5555678901', 'carlos.jimenez@email.com', 'Calle Cielo 202', '1987-05-05', 'imagenes/carlos.jpg', 2),
+('Laura', 'Lopez', '5556789012', 'laura.lopez@email.com', 'Calle Sol 303', '1989-06-06', 'imagenes/laura.jpg', 3),
+('Javier', 'Ramirez', '5557890123', 'javier.ramirez@email.com', 'Calle Luna 404', '1993-07-07', 'imagenes/javier.jpg', 1),
+('Elena', 'Torres', '5558901234', 'elena.torres@email.com', 'Avenida Mar 505', '1991-08-08', 'imagenes/elena.jpg', 2),
+('Diego', 'Fernandez', '5559012345', 'diego.fernandez@email.com', 'Calle Tierra 606', '1986-09-09', 'imagenes/diego.jpg', 3),
+('Sofía', 'Gonzalez', '5550123456', 'sofia.gonzalez@email.com', 'Calle Nube 707', '1984-10-10', 'imagenes/sofia.jpg', 1),
+('Andrés', 'Cruz', '5551234560', 'andres.cruz@email.com', 'Avenida Estrella 808', '1990-11-11', 'imagenes/andres.jpg', 2),
+('Natalia', 'Rojas', '5552345671', 'natalia.rojas@email.com', 'Calle Agua 909', '1992-12-12', 'imagenes/natalia.jpg', 3),
+('Ricardo', 'Morales', '5553456782', 'ricardo.morales@email.com', 'Calle Viento 101', '1985-01-13', 'imagenes/ricardo.jpg', 1),
+('Patricia', 'Salazar', '5554567893', 'patricia.salazar@email.com', 'Calle Fuego 202', '1987-02-14', 'imagenes/patricia.jpg', 2),
+('Felipe', 'Martínez', '5555678904', 'felipe.martinez@email.com', 'Calle Hierro 303', '1994-03-15', 'imagenes/felipe.jpg', 3),
+('Verónica', 'Soto', '5556789015', 'veronica.soto@email.com', 'Calle Plomo 404', '1991-04-16', 'imagenes/veronica.jpg', 1),
+('Santiago', 'Paredes', '5557890126', 'santiago.paredes@email.com', 'Avenida Brisa 505', '1988-05-17', 'imagenes/santiago.jpg', 2),
+('Gabriela', 'Cano', '5558901237', 'gabriela.cano@email.com', 'Calle Tierra 606', '1990-06-18', 'imagenes/gabriela.jpg', 3),
+('Mauricio', 'Díaz', '5559012348', 'mauricio.diaz@email.com', 'Calle Rayo 707', '1986-07-19', 'imagenes/mauricio.jpg', 1),
+('Claudia', 'Vega', '5550123459', 'claudia.vega@email.com', 'Calle Eco 808', '1992-08-20', 'imagenes/claudia.jpg', 2);
+
+INSERT INTO Educacion (id_empleado, nivel_educativo, institucion, anio_graduacion)
+VALUES
+(1, 'Licenciatura', 'Universidad Nacional', 2007),
+(2, 'Maestría', 'Universidad Estatal', 2015),
+(3, 'Licenciatura', 'Universidad Politécnica', 2010),
+(4, 'Diplomado', 'Instituto de Educación', 2018),
+(5, 'Licenciatura', 'Universidad de Ciencias', 2009),
+(6, 'Maestría', 'Universidad Tecnológica', 2017),
+(7, 'Licenciatura', 'Universidad de Diseño', 2012),
+(8, 'Diplomado', 'Instituto de Tecnología', 2020),
+(9, 'Licenciatura', 'Universidad Estatal', 2011),
+(10, 'Maestría', 'Universidad Nacional', 2016),
+(11, 'Licenciatura', 'Universidad Politécnica', 2014),
+(12, 'Licenciatura', 'Universidad de Ciencias', 2013),
+(13, 'Diplomado', 'Instituto de Educación', 2019),
+(14, 'Licenciatura', 'Universidad Nacional', 2015),
+(15, 'Maestría', 'Universidad Tecnológica', 2018),
+(16, 'Licenciatura', 'Universidad de Diseño', 2011),
+(17, 'Diplomado', 'Instituto de Tecnología', 2021),
+(18, 'Licenciatura', 'Universidad Estatal', 2010),
+(19, 'Maestría', 'Universidad Nacional', 2016),
+(20, 'Licenciatura', 'Universidad Politécnica', 2013);
+
+INSERT INTO Detalle_Quincenal (id_empleado, periodo, horas_trabajadas, deducciones, total_ganado)
+VALUES
+(1, '2024-01-01', 80, 100, 1300.00),
+(2, '2024-01-01', 90, 150, 1050.00),
+(3, '2024-01-01', 85, 200, 1400.00),
+(4, '2024-01-01', 75, 120, 1080.00),
+(5, '2024-01-01', 95, 80, 1140.00),
+(6, '2024-01-01', 100, 160, 1100.00),
+(7, '2024-01-01', 70, 130, 920.00),
+(8, '2024-01-01', 88, 90, 950.00),
+(9, '2024-01-01', 92, 100, 1250.00),
+(10, '2024-01-01', 85, 130, 1150.00),
+(11, '2024-01-01', 80, 110, 1350.00),
+(12, '2024-01-01', 90, 150, 1020.00),
+(13, '2024-01-01', 85, 120, 880.00),
+(14, '2024-01-01', 70, 140, 950.00),
+(15, '2024-01-01', 75, 130, 870.00),
+(16, '2024-01-01', 90, 110, 1450.00),
+(17, '2024-01-01', 80, 100, 950.00),
+(18, '2024-01-01', 85, 130, 1200.00),
+(19, '2024-01-01', 90, 120, 1300.00),
+(20, '2024-01-01', 95, 150, 1400.00);
+
+SELECT e.nombre, e.apellido, dq.total_ganado
+FROM Empleados e
+JOIN Detalle_Quincenal dq ON e.id_empleado = dq.id_empleado
+WHERE dq.total_ganado > 500.00;
